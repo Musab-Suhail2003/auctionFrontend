@@ -14,7 +14,6 @@ class Registerpage extends StatefulWidget {
 class _Registerpage extends State<Registerpage> {
   final String baseUrl = "http://10.0.2.2:3000"; // Change to your server's URL
   final String loginEndpoint = "/users/register";
-  dynamic token;
 
   final _email = TextEditingController();
   final _username = TextEditingController();
