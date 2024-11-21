@@ -64,8 +64,8 @@ class _loginpage extends State<Loginpage> {
     if (result['success']) {
       // Save the token locally if needed (e.g., using shared_preferences)
       // Redirect user to another page
-      var x = [result['token'], result['email'], result['user']];
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>Landingpage(token: x)));
+      
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Landingpage(token: result['token'])));
     } else {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,7 +93,7 @@ class _loginpage extends State<Loginpage> {
       return {
         'success': true,
         'message': 'Login successful',
-        'token': data['token'], // Assumes your server sends a JWT
+        'token': [data['token'], data['user']['user_id']],  // Assumes your server sends a JWT
       };
     } else {
       final error = jsonDecode(response.body);

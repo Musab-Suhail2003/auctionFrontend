@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "auctionista",
-      theme: myColors,
+      theme: myColors,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
       debugShowCheckedModeBanner: false,
       routes: {
         '/' : (context) => Loginpage(),

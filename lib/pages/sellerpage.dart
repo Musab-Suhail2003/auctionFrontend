@@ -12,13 +12,13 @@ class Sellerpage extends StatelessWidget {
         appBar: AppBar(
           iconTheme: IconThemeData(color: Theme.of(context).colorScheme.tertiary),
           backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text('Two Tabs Example', style: TextStyle(color: Theme.of(context).colorScheme.tertiary),),
+          title: Text('Sellers Page!', style: TextStyle(color: Theme.of(context).colorScheme.tertiary),),
           bottom: TabBar(
             labelColor: Theme.of(context).colorScheme.tertiary,
             indicatorColor: Theme.of(context).colorScheme.tertiary,
             tabs: [
               Tab(icon: Icon(Icons.store, color: Theme.of(context).colorScheme.tertiary,), text: "Items", ),
-              Tab(icon: Icon(Icons.store, color: Theme.of(context).colorScheme.tertiary,), text: "Settings"),
+              Tab(icon: Icon(Icons.storefront_rounded, color: Theme.of(context).colorScheme.tertiary,), text: "Auctions"),
             ],
           ),
         ),
