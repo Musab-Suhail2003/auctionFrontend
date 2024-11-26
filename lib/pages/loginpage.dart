@@ -8,6 +8,8 @@ import 'package:auction_site/pages/registerpage.dart';
 import 'package:http/http.dart' as http;
 
 class Loginpage extends StatefulWidget {
+  const Loginpage({super.key});
+
   @override
   _loginpage createState() => _loginpage();
 }
@@ -90,10 +92,11 @@ class _loginpage extends State<Loginpage> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      print(data['token']);
       return {
         'success': true,
         'message': 'Login successful',
-        'token': [data['token'], data['user']['user_id']],  // Assumes your server sends a JWT
+        'token': [data['token'], data['user']],  // Assumes your server sends a JWT
       };
     } else {
       final error = jsonDecode(response.body);

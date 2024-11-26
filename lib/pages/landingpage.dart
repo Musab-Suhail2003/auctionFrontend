@@ -15,6 +15,20 @@ class Landingpage extends StatelessWidget {
         title: Text('Auctionista!', style: TextStyle(color: Theme.of(context).colorScheme.tertiary, )),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
+        actions: [
+            Row(
+              children: [
+                const Icon(Icons.person, color: Colors.white, size: 18,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Text(
+                    '${token[1]['user_name']} ${token[1]['user_id']}',
+                    style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -23,7 +37,7 @@ class Landingpage extends StatelessWidget {
             children: [
               const SizedBox(height: 40,),
               newButton(text: 'Sell', ontap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Sellerpage(token: token)) ); 
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SellerPage(token: token)) ); 
                 }),
               const SizedBox(height: 40,),
               newButton(text: 'Bid', ontap: (){

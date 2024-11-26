@@ -44,12 +44,14 @@ class _Registerpage extends State<Registerpage> {
     return;
   }
 
+
   // Prepare data
   final body = {
     'email': _email.text,
     'user_name': _username.text,
     'password': _password.text,
   };
+  print(body);
 
   try {
     // Send POST request
@@ -117,6 +119,6 @@ class _Registerpage extends State<Registerpage> {
   Widget error(String? errorMessage){
     if(errorMessage == null){ return const SizedBox(height: 5,); }
 
-    return Text(errorMessage, textAlign: TextAlign.left, style: const TextStyle(fontSize: 10),);
+    return Text('$errorMessage!', textAlign: TextAlign.left, style: const TextStyle(fontSize: 8),);
   }
 }

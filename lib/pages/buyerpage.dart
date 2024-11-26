@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 
+import 'package:auction_site/auctionpage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ import 'package:http/http.dart' as http;
 class Buyerpage extends StatefulWidget {
   final dynamic token;
 
-  Buyerpage({required this.token});
+  const Buyerpage({super.key, required this.token});
 
 
   @override
@@ -64,7 +65,7 @@ class _BuyerpageState extends State<Buyerpage> {
               children: [
                 const Icon(Icons.monetization_on, color: Colors.white, size: 18,),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Text(
                     '${profile['wallet']}',
                     style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 16),
@@ -98,26 +99,7 @@ class _BuyerpageState extends State<Buyerpage> {
                 physics: const ScrollPhysics(),
                 itemBuilder: (context, index) {
                   var i = data[index];
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.tertiary,
-                      borderRadius: BorderRadius.circular(15.0),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 7,
-                          color: Theme.of(context).colorScheme.primary,
-                          offset: Offset(0, 3),
-                        )
-                      ],
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 5),
-                    child: ListTile(
-
-                      title: Text(i['item_name']), // Ensure this is a string
-                      trailing: Text("top bid: ${i['min_bid']}", style: TextStyle(color: Theme.of(context).colorScheme.primary),), // Convert to string
-                    ),
-                  );
+                  return auctionTile(i: i, profile: profile,);
                 },
               
               );
@@ -175,5 +157,44 @@ class _BuyerpageState extends State<Buyerpage> {
       print('Exception: $e');
     }
     return null;
+  }
+}
+
+class auctionTile extends StatelessWidget {
+  const auctionTile({
+    super.key,
+    required this.i,
+    required this.profile
+  });
+  final dynamic profile;
+  final dynamic i;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Auctionpage(auction: i, profile: profile)));
+      },
+      child: Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.tertiary,
+        borderRadius: BorderRadius.circular(15.0),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 7,
+            color: Theme.of(context).colorScheme.primary,
+            offset: const Offset(0, 3),
+          )
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(
+          vertical: 10, horizontal: 5),
+      child: ListTile(
+    
+        title: Text(i['item_name']), // Ensure this is a string
+        trailing: Text("top bid: ${i['min_bid']}", style: TextStyle(color: Theme.of(context).colorScheme.primary),), // Convert to string
+      ),
+    )
+    );
   }
 }
