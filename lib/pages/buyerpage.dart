@@ -20,7 +20,7 @@ class Buyerpage extends StatefulWidget {
 }
 
 class _BuyerpageState extends State<Buyerpage> {
-  final String baseUrl = "http://10.0.2.2:3000"; // Your server's URL
+  final String baseUrl = "https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app"; // Your server's URL
   final String auctionlist = "/auctions/active";
   final String bidList = "/bids/mybids/";
   final String highestbid = "/bids/";

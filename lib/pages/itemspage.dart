@@ -93,7 +93,7 @@ class _ItemspageState extends State<Itemspage> {
   Future<void> putOnAuction(int days, int hours)async{
     try {
       // Replace with your backend endpoint
-      const String apiUrl = 'http://10.0.2.2:3000/auctions/';
+      const String apiUrl = 'https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/auctions/';
 
       // Set the required end time (e.g., 24 hours from now)
       final DateTime endTime = DateTime.now().add(Duration(days: days, hours: hours));
@@ -129,7 +129,7 @@ class _ItemspageState extends State<Itemspage> {
   }
 
   Future<void> uploadImages(List<XFile> images) async {
-  const String apiUrl = "http://10.0.2.2:3000/";
+  const String apiUrl = "https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/";
 
   // Create multipart request
   var request = http.MultipartRequest('POST', Uri.parse(apiUrl));

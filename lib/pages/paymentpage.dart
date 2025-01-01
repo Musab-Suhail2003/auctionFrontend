@@ -39,7 +39,7 @@ class _PaymentpageState extends State<Paymentpage> {
   }
   Future<void> getMoney(double amount, int user_id, String token) async {
     try {
-    var url = Uri.parse('http://10.0.2.2:3000/users/wallet');
+    var url = Uri.parse('https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/users/wallet');
     
     final response = await http.post(
       url, 
