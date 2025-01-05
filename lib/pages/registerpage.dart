@@ -14,7 +14,7 @@ class Registerpage extends StatefulWidget {
 
 
 class _Registerpage extends State<Registerpage> {
-  final String baseUrl = "https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app"; // Change to your server's URL
+  final String baseUrl = "https://auction-node-server.vercel.app"; // Change to your server's URL
   final String loginEndpoint = "/users/register";
 
   final _email = TextEditingController();

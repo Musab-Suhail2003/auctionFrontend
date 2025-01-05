@@ -19,7 +19,7 @@ class _VerificationFormState extends State<VerificationForm> {
   final TextEditingController _phNumberController = TextEditingController();
 
   Future<void> _submitVerification() async {
-    final String apiUrl = "https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/verification/";
+    final String apiUrl = "https://auction-node-server.vercel.app/verification/";
 
     try {
       final response = await http.post(

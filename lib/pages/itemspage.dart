@@ -16,16 +16,22 @@ class Itemspage extends StatefulWidget {
 
 class _ItemspageState extends State<Itemspage> {
   bool _isLoading = false;
+  List<Widget> _imageWidgets = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final data = widget.itemData;
 
     return Scaffold(
-
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.tertiary),
         centerTitle: true,
-        title: Text(data['item_name'], style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 25),),
+        title: Text('${data['sold']?'(sold)':''}  ${data['item_name']}', style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 25),),
         actions: [
           ElevatedButton(
       onPressed: _isLoading ? null : _showEndTimeDialog,
@@ -57,7 +63,7 @@ class _ItemspageState extends State<Itemspage> {
                   ),
                 ],
               ),
-              child: ImageCarousel(itemId: widget.itemData['item_id']),
+              child: ImageCarousel(images: data['images']),
             )
             ),
           Positioned(
@@ -90,13 +96,13 @@ class _ItemspageState extends State<Itemspage> {
     )
     );
   }
-  Future<void> putOnAuction(int days, int hours)async{
+  Future<void> putOnAuction(int days, int hours, int min)async{
     try {
       // Replace with your backend endpoint
-      const String apiUrl = 'https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/auctions/';
+      const String apiUrl = 'https://auction-node-server.vercel.app/auctions/';
 
       // Set the required end time (e.g., 24 hours from now)
-      final DateTime endTime = DateTime.now().add(Duration(days: days, hours: hours));
+      final DateTime endTime = DateTime.now().add(Duration(days: days, hours: hours, minutes: min));
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -129,7 +135,7 @@ class _ItemspageState extends State<Itemspage> {
   }
 
   Future<void> uploadImages(List<XFile> images) async {
-  const String apiUrl = "https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/";
+  const String apiUrl = "https://auction-node-server.vercel.app.vercel.app/";
 
   // Create multipart request
   var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
@@ -171,6 +177,7 @@ Future<void> pickAndUploadImages() async {
   Future<void> _showEndTimeDialog() async {
     final daysController = TextEditingController();
     final hoursController = TextEditingController();
+    final minController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -197,6 +204,15 @@ Future<void> pickAndUploadImages() async {
                   border: OutlineInputBorder(),
                 ),
               ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: minController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: "minutes",
+                  border: OutlineInputBorder(),
+                ),
+              ),
             ],
           ),
           actions: [
@@ -208,9 +224,10 @@ Future<void> pickAndUploadImages() async {
               onPressed: () {
                 final int days = int.tryParse(daysController.text) ?? 0;
                 final int hours = int.tryParse(hoursController.text) ?? 0;
+                final int min = int.tryParse(minController.text) ?? 0;
 
                 Navigator.pop(context); // Close the dialog
-                putOnAuction(days, hours); // Call the API
+                putOnAuction(days, hours, min); // Call the API
               },
               child: const Text("Submit"),
             ),

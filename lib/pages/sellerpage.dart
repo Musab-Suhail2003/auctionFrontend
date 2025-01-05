@@ -19,7 +19,7 @@ class SellerPage extends StatefulWidget {
 }
 
 class _SellersPageState extends State<SellerPage> {
-  final String baseUrl = "https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app"; // Your server's URL
+  final String baseUrl = "https://auction-node-server.vercel.app"; // Your server's URL
   final String additems = "/items/additem";
   final itemNameController = TextEditingController();
   final itemPriceController = TextEditingController();
@@ -55,10 +55,14 @@ class _SellersPageState extends State<SellerPage> {
           'Authorization': 'Bearer ${widget.token[0]}'
         },
       );
+      final r = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        return List<dynamic>.from(jsonDecode(response.body));
+        print("categories.... $r");
+        return List<dynamic>.from(r);
       } else {
-        print('Error: ${response.body}');
+                print("categories.... $r");
+
+        print('Error: ${r}');
       }
     }catch (e) {
       print('Exception: $e');
@@ -218,9 +222,7 @@ class _SellersPageState extends State<SellerPage> {
   }
 
   Widget addItemTab() {
-    if (categories.length == 0){
-      return const SizedBox(height: 100,);
-    }
+    
   return Padding(
     padding: const EdgeInsets.all(16.0),
     child: SingleChildScrollView(
@@ -245,7 +247,7 @@ class _SellersPageState extends State<SellerPage> {
 
         // Ensure proper layout for image and buttons
         SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+          scrollDirection: Axis.vertical,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -263,21 +265,21 @@ class _SellersPageState extends State<SellerPage> {
         ),
         const SizedBox(height: 10),
         // Dropdown for categories
-       DropdownButtonFormField<int>(
-  value: selectedCategory,
-  hint: const Text("Select a Category"),
-  onChanged: (int? value) {
-    setState(() {
-      selectedCategory = value;
-    });
-  },
-  items: categories.map((category) {
-    return DropdownMenuItem<int>(
-      value: category['category_id'],  // Ensure the correct key is used
-      child: Text(category['category_name'] ?? " "),
-    );
-  }).toList(),
-),
+        DropdownButtonFormField<int>(
+          value: selectedCategory,
+          hint: const Text("Select a Category"),
+          onChanged: (int? value) {
+            setState(() {
+              selectedCategory = value;
+            });
+          },
+          items: categories.map((category) {
+            return DropdownMenuItem<int>(
+              value: category['category_id'],  // Ensure the correct key is used
+              child: Text(category['category_name'] ?? " "),
+            );
+          }).toList(),
+        ),
 
         // Add Item button
         Center(
@@ -321,6 +323,7 @@ void ontap(){
                   itemCount: items.length,
                   physics: const ScrollPhysics(),
                   itemBuilder: (context, index) {
+                    bool sold = items[index]['sold'];
                     var i = items[index];
                     print(i);
                     return Container(
@@ -341,7 +344,8 @@ void ontap(){
                         child: ListTile(
                               title: Text(i['item_name']?? ''), // Ensure this is a string
                               trailing: Column(
-                                children: [const SizedBox(height: 10,),
+                                children: [
+                                  Text(sold?"sold":"available", style: TextStyle(color: Theme.of(context).colorScheme.primary),),
                                   Text("min bid: ${i['min_bid']}", style: TextStyle(color: Theme.of(context).colorScheme.primary),),
                                 Text("user id: ${i['user_id']}", style: TextStyle(color: Theme.of(context).colorScheme.primary),)],
                               ) // Convert to string

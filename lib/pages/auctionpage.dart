@@ -25,7 +25,7 @@ class _AuctionpageState extends State<Auctionpage> {
   Future<List<dynamic>> getHighestBids()async {
     try{
     final response = await http.get(
-      Uri.parse('https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/bids/${widget.auction['auction_id']}'),
+      Uri.parse('https://auction-node-server.vercel.app/bids/${widget.auction['auction_id']}'),
       headers: {
           'Content-Type': 'application/json',
           'Connection': 'keep-alive',
@@ -58,7 +58,7 @@ class _AuctionpageState extends State<Auctionpage> {
 
   Future<void> placeBid(double amount) async {
   try {
-    var url = Uri.parse('https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/bids/placebid');
+    var url = Uri.parse('https://auction-node-server.vercel.app/bids/placebid');
     
     final response = await http.post(
       url, 
@@ -111,7 +111,7 @@ class _AuctionpageState extends State<Auctionpage> {
   @override
   Widget build(BuildContext context) {
     final details = widget.auction;
-    print(details);
+    print("details $details");
     bool isOpen = widget.auction['status']=='open';
     String topBids = isOpen?'Top Bids':'Winner Bid';
     DateTime targetTime = DateTime.parse(details['end_time']); // Parse the target timestamp
@@ -162,7 +162,7 @@ class _AuctionpageState extends State<Auctionpage> {
                   ),
                 ],
               ),
-              child: ImageCarousel(itemId: details['item_id']),
+              child: ImageCarousel(images: details['images']),
             )
             ),
           Positioned(
@@ -369,7 +369,7 @@ class _AuctionpageState extends State<Auctionpage> {
     }
 
     try {
-      final url = Uri.parse('https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/complaints/'); // Change to your backend URL
+      final url = Uri.parse('https://auction-node-server.vercel.app/complaints/'); // Change to your backend URL
       final response = await http.post(
         url,
         headers: {
@@ -378,6 +378,8 @@ class _AuctionpageState extends State<Auctionpage> {
         },
         body: jsonEncode({
           "complaint": _complaintController.text,
+          "complainer" : widget.profile['user_id'],
+          "against": widget.auction['user_id'],
         }),
       );
 
@@ -401,7 +403,7 @@ class _AuctionpageState extends State<Auctionpage> {
 
   Future<void> confirmReceiption(int auction_id) async{
     try {
-    var url = Uri.parse('https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app/auctions/end/releasepayment/$auction_id');
+    var url = Uri.parse('https://auction-node-server.vercel.app/auctions/end/releasepayment/$auction_id');
     
     final response = await http.get(
       url, 

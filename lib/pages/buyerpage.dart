@@ -1,13 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:auction_site/pages/auctionpage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class Buyerpage extends StatefulWidget {
   final dynamic token;
@@ -20,7 +14,7 @@ class Buyerpage extends StatefulWidget {
 }
 
 class _BuyerpageState extends State<Buyerpage> {
-  final String baseUrl = "https://auction-node-server-oq40z96g5-musabs-projects-a0bba313.vercel.app"; // Your server's URL
+  final String baseUrl = "https://auction-node-server.vercel.app"; // Your server's URL
   final String auctionlist = "/auctions/active";
   final String bidList = "/bids/mybids/";
   final String highestbid = "/bids/";
@@ -36,21 +30,28 @@ class _BuyerpageState extends State<Buyerpage> {
 
     super.initState();
     fetchData(); 
-    isLoading = false;// Fetch data asynchronously
+    isLoading = false; // Fetch data asynchronously
   }
 
   Future<void> fetchData() async {
     final fetchedData = await getAuctions(widget.token[0]);
     final fetchProfile = await getProfile(widget.token[0], widget.token[1]);
     final fetchBids = await getBids(widget.token[0], widget.token[1]);
-    setState(() {
-      data = fetchedData;
-      profile = fetchProfile;
-      bids = fetchBids;
-      isLoading = false; // Stop showing the loader
-    });
+    
+    if (mounted) {
+      setState(() {
+        data = fetchedData;
+        profile = fetchProfile;
+        bids = fetchBids;
+      });
+    }
   }
 
+  @override
+  void dispose() {
+    // Perform any necessary cleanup here
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +100,7 @@ class _BuyerpageState extends State<Buyerpage> {
 
   Widget bidtab(){
     print(bids);
-    return (isLoading  || data.length == 0 ||bids.length == 0)
+    return (isLoading  || data.length == 0 ||bids == null)
         ? const Center(child: Text("Couldnt Find Bids"),)
         : ListView.builder(
             itemCount: (bids.length < data.length) ? bids.length : data.length,
@@ -184,20 +185,20 @@ class _BuyerpageState extends State<Buyerpage> {
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final profile = jsonDecode(response.body);
       return profile;
     } else {
       final error = jsonDecode(response.body);
       print(error);
       return {
-        'wallet': 0
+        'wallet': null
       };
     }
     } catch (e) {
       print(e.toString());
       return {
-        'wallet': 0
+        'wallet': null
       };
     }
   }

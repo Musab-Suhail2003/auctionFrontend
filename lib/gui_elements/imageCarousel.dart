@@ -1,47 +1,72 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ImageCarousel extends StatefulWidget {
-  final int itemId;
+  final List<dynamic> images;
 
-  const ImageCarousel({Key? key, required this.itemId}) : super(key: key);
-
+  const ImageCarousel({Key? key, required this.images}) : super(key: key);
   @override
   _ImageCarouselState createState() => _ImageCarouselState();
 }
 
 class _ImageCarouselState extends State<ImageCarousel> {
-  List<String> imageUrls = [];
+
+  List<Image> images = [];
   bool isLoading = true;
+
 
   @override
   void initState() {
+    print("TESTING IMAGES");
+        print(widget.images);
+
     super.initState();
-    fetchImages();
+    getImages();
   }
 
-  Future<void> fetchImages() async {
-    final url = 'http://10.0.2.2:3000/upload/pictures/${widget.itemId}'; // Replace with your actual endpoint
-    try {
-      final response = await http.get(Uri.parse(url));
+  Future<List<Widget>> getImages() async {
+    setState(() {
+      isLoading = true;
+    });
 
-      if (response.statusCode == 200) {
-        final List<dynamic> images = jsonDecode(response.body);
-        setState(() {
-          imageUrls = images.map((img) => img['image_url'] as String).toList();
-          isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load images');
+    try {
+      final List<dynamic> imageUrls = widget.images;
+
+      for (String url in imageUrls) {
+        print(url);
+        images.add(
+          Image.network(
+            "https://auction-node-server.vercel.app/$url",
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const Center(
+                child: Icon(Icons.error_outline, color: Colors.red),
+              );
+            },
+          ),
+        );
       }
+
+      setState(() {
+        print('${images.length} ads');
+        isLoading = false;
+      });
+      
+      return images;
     } catch (e) {
-      print('Error fetching images: $e');
       setState(() {
         isLoading = false;
       });
+      print('Error loading images: $e');
+      return [
+        const Center(
+          child: Icon(Icons.error_outline, color: Colors.red, size: 50),
+        )
+      ];
     }
   }
 
@@ -51,7 +76,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (imageUrls.isEmpty) {
+    if (images.isEmpty) {
       return const Center(child: Text('No images available'));
     }
 
@@ -63,15 +88,15 @@ class _ImageCarouselState extends State<ImageCarousel> {
         enableInfiniteScroll: true,
         aspectRatio: 16 / 9,
       ),
-      items: imageUrls.map((url) {
+      items: images.map((img) {
         return Builder(
           builder: (BuildContext context) {
             return Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(horizontal: 5.0),
-              decoration: BoxDecoration(color: Colors.amber),
-              child: Image.network(
-                url,
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
+              child: Image(
+                image: img.image,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return const Center(child: Text('Image not available'));
